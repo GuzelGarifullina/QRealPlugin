@@ -1,0 +1,12 @@
+{
+    \"Name\" : \"QReal\",
+    \"Version\" : \"0.0.1\",
+    \"CompatVersion\" : \"0.0.1\",
+    \"Vendor\" : \"QReal\",
+    \"Copyright\" : \"(C) QReal\",
+    \"License\" : \"Apache License v2.0\",
+    \"Description\" : \"QRealPlugin optimizes the development process of QReal.\",
+    \"Url\" : \"http://www.mycompany.com\",
+    $$dependencyList
+}
+
