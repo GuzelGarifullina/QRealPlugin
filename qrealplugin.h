@@ -12,8 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-#ifndef QREAL_H
-#define QREAL_H
+#pragma once
 
 #include "qreal_global.h"
 
@@ -41,6 +40,4 @@ private slots:
 
 } // namespace Internal
 } // namespace QReal
-
-#endif // QREAL_H
 

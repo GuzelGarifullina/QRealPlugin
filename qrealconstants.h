@@ -12,8 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-#ifndef QREALCONSTANTS_H
-#define QREALCONSTANTS_H
+#pragma once
 
 namespace QReal {
 namespace Constants {
@@ -24,5 +23,4 @@ const char MENU_ID[] = "QReal.Menu";
 } // namespace QReal
 } // namespace Constants
 
-#endif // QREALCONSTANTS_H
 

@@ -12,8 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-#ifndef QREAL_GLOBAL_H
-#define QREAL_GLOBAL_H
+#pragma once
 
 #include <QtGlobal>
 
@@ -23,5 +22,4 @@
 #  define QREALSHARED_EXPORT Q_DECL_IMPORT
 #endif
 
-#endif // QREAL_GLOBAL_H
 
