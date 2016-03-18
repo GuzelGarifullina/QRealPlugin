@@ -20,6 +20,8 @@ namespace Constants{
 const char ACTION_ID[] = "QReal.Action";
 const char MENU_ID[] = "QReal.Menu";
 
+const char CORE_SETTINGS_GROUP []= "QRealPlugin";
+
 } // namespace QReal
 } // namespace Constants
 

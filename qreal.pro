@@ -16,11 +16,13 @@ DEFINES += QREAL_LIBRARY
 
 # QReal files
 
-SOURCES += qrealplugin.cpp
+SOURCES += qrealplugin.cpp \
+    qRealCoreSettings.cpp
 
 HEADERS += qrealplugin.h \
         qreal_global.h \
-        qrealconstants.h
+        qrealconstants.h \
+    qRealCoreSettings.h
 
 # Qt Creator linking
 

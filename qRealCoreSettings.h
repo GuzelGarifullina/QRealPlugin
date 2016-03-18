@@ -1,4 +1,4 @@
-/* Copyright 2016 Guzel Garifullina
+/* Copyright  2016 Guzel Garifullina
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,35 +14,32 @@
 
 #pragma once
 
-#include "qreal_global.h"
-#include "qRealCoreSettings.h"
+#include <QtCore/qglobal.h>
+#include <QObject>
 
-#include <extensionsystem/iplugin.h>
 #include <QSettings>
 
-namespace QReal{
-namespace Internal{
-
-class QRealPlugin: public ExtensionSystem::IPlugin
+class qRealCoreSettings: public QObject
 {
 	Q_OBJECT
-	Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QtCreatorPlugin" FILE "QReal.json")
-
 public:
-	QRealPlugin();
-	~QRealPlugin();
+	qRealCoreSettings();
+	~qRealCoreSettings();
 
-	bool initialize(const QStringList &arguments, QString *errorString);
-	void extensionsInitialized();
-	ShutdownFlag aboutToShutdown();
-	void slotObjectAdded(QObject * obj);
+	//change qreal plugin settings
+	void saveToSettings() const;
+
+	//load default settings on first startup
+	//plugin and system
+	void loadDefaultSettings();
 private:
-	qRealCoreSettings settings;
-
-private slots:
-	void triggerAction();
+	QSettings *settings;
+	bool isFirtTimeLoaded();
+	void loadDefaultPluginSettings();
+	void loadDefaultSystemSettings();
+signals:
+	void settingsChanged();
+//public slots:
 };
 
-} // namespace Internal
-} // namespace QReal
 

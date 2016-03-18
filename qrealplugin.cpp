@@ -39,8 +39,7 @@
 #include <QTableWidget>
 
 using namespace QReal::Internal;
-QRealPlugin::QRealPlugin():
-	settings(Core::ICore::settings())
+QRealPlugin::QRealPlugin()
 {
 	// Create your members
 }
@@ -57,13 +56,7 @@ bool QRealPlugin::initialize(const QStringList &arguments, QString *errorString)
 	// Register objects in the plugin manager's object pool
 	// Load settings
 
-	bool spacesForTabs= settings->value("textTypingSettings/AutoIndent").toBool();
-	std::cout << spacesForTabs << std::endl;
-	settings->setValue("textTypingSettings/AutoIndent", true);
-	settings->sync();
-	spacesForTabs= settings->value("textTypingSettings/AutoIndent").toBool();
-	std::cout << spacesForTabs << std::endl;
-
+	settings.loadDefaultSettings();
 	QString name = QCoreApplication::arguments().at(0);
 	std::cout << name.toStdString() << std::endl;
 
