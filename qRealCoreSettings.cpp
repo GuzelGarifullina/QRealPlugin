@@ -16,6 +16,7 @@
 #undef QT_NO_CAST_FROM_ASCII
 #include <iostream>
 
+#include <fstream>
 #include <coreplugin/icore.h>
 
 #include "qrealconstants.h"
@@ -48,22 +49,54 @@ void qRealCoreSettings::loadDefaultPluginSettings(){
 	settings->endGroup();
 }
 void qRealCoreSettings::loadDefaultSystemSettings(){
+	const int MAX_CHARS_PER_LINE = 512;
+	std::string fileName ="/home/guzel/Programming/all/lol/readFromFile/data.txt";
 
-	settings->beginGroup("textTypingSettings");
-	bool spacesForTabs= settings->value("AutoIndent").toBool();
-	std::cout << spacesForTabs << std::endl;
-	settings->setValue("textTypingSettings/AutoIndent", false);
+	std::ifstream fin;
+	fin.open(fileName); // open a file
+	if (!fin.good()){
+		std::cout << "Error when open file";
+		return; // exit if file not found
+	}
+	char lineBuf[MAX_CHARS_PER_LINE] = "";
+	QString group ="";
+	QString groupX="";
+	QString name="";
+	QString value="";
+	int pos = 0;
+	while (fin.getline(lineBuf, MAX_CHARS_PER_LINE))
+	{
+		QString line = QString(lineBuf);
+		pos = line.indexOf(']');
+		if (line.indexOf('[') == 0
+			&& pos > 0)
+		{
+			groupX = line.mid(1, pos -1);
+			if (group != ""){
+				settings->endGroup();
+			}
+			group = groupX;
+			settings->beginGroup(group);
+		}
+		else
+		{
+			pos = line.indexOf('=');
+			if (pos > 0) {
+				name = line.left(pos);
+				value = line.mid(pos+1, line.length()-1);
+				settings->setValue(name, value);
+			}
+		}
+	}
 	settings->endGroup();
-	spacesForTabs= settings->value("AutoIndent").toBool();
-	std::cout << spacesForTabs << std::endl;
 }
 bool qRealCoreSettings::isFirtTimeLoaded(){
 	settings->beginGroup(QLatin1String(Constants::CORE_SETTINGS_GROUP));
-	if (!settings->contains(QLatin1String("abcde"))){
+	bool res=settings->contains(QLatin1String("abcd"));
+	if (!res){
 		std::cout<< "first time settings loaded";
-		settings->endGroup();
-		return true;
 	}
-	return false;
+	settings->endGroup();
+	return res;
 }
 
