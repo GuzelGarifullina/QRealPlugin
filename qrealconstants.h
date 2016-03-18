@@ -14,8 +14,8 @@
 
 #pragma once
 
-namespace QReal {
-namespace Constants {
+namespace QReal{
+namespace Constants{
 
 const char ACTION_ID[] = "QReal.Action";
 const char MENU_ID[] = "QReal.Menu";

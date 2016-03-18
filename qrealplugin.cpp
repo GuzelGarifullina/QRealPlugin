@@ -12,6 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
+#undef QT_NO_CAST_FROM_ASCII
+#include <iostream>
+#include <QCoreApplication>
 #include "qrealplugin.h"
 #include "qrealconstants.h"
 
@@ -22,16 +25,22 @@
 #include <coreplugin/actionmanager/actioncontainer.h>
 #include <coreplugin/coreconstants.h>
 
+#include <extensionsystem/pluginmanager.h>
+
 #include <QAction>
 #include <QMessageBox>
 #include <QMainWindow>
 #include <QMenu>
 
+#include <coreplugin/inavigationwidgetfactory.h>
+
 #include <QtPlugin>
+#include <coreplugin/inavigationwidgetfactory.h>
+#include <QTableWidget>
 
 using namespace QReal::Internal;
-
-QRealPlugin::QRealPlugin()
+QRealPlugin::QRealPlugin():
+	settings(Core::ICore::settings())
 {
 	// Create your members
 }
@@ -40,12 +49,24 @@ QRealPlugin::~QRealPlugin()
 {
 	// Unregister objects from the plugin manager's object pool
 	// Delete members
+	//delete settings;
 }
 
 bool QRealPlugin::initialize(const QStringList &arguments, QString *errorString)
 {
 	// Register objects in the plugin manager's object pool
 	// Load settings
+
+	bool spacesForTabs= settings->value("textTypingSettings/AutoIndent").toBool();
+	std::cout << spacesForTabs << std::endl;
+	settings->setValue("textTypingSettings/AutoIndent", true);
+	settings->sync();
+	spacesForTabs= settings->value("textTypingSettings/AutoIndent").toBool();
+	std::cout << spacesForTabs << std::endl;
+
+	QString name = QCoreApplication::arguments().at(0);
+	std::cout << name.toStdString() << std::endl;
+
 	// Add actions to menus
 	// Connect to other plugins' signals
 	// In the initialize function, a plugin can be sure that the plugins it
@@ -54,17 +75,26 @@ bool QRealPlugin::initialize(const QStringList &arguments, QString *errorString)
 	Q_UNUSED(arguments)
 	Q_UNUSED(errorString)
 
-	QAction *action = new QAction(tr("QReal action"), this);
-	Core::Command *cmd = Core::ActionManager::registerAction(action, Constants::ACTION_ID,
-	                                                         Core::Context(Core::Constants::C_GLOBAL));
+
+	QAction *action = new QAction(tr("QReal actions"), this);
+	Core::Command *cmd = Core::ActionManager::registerAction(action
+		, Constants::ACTION_ID
+		, Core::Context(Core::Constants::C_GLOBAL));
 	cmd->setDefaultKeySequence(QKeySequence(tr("Ctrl+Alt+Meta+A")));
 	connect(action, SIGNAL(triggered()), this, SLOT(triggerAction()));
+
 
 	Core::ActionContainer *menu = Core::ActionManager::createMenu(Constants::MENU_ID);
 	menu->menu()->setTitle(tr("QReal"));
 	menu->addAction(cmd);
-	Core::ActionManager::actionContainer(Core::Constants::M_TOOLS)->addMenu(menu);
+	Core::ActionManager::actionContainer(Core::Constants::M_WINDOW)->addMenu(menu);
 
+	//menu between window and help
+	Core::ActionContainer* acMenuBar = Core::ActionManager::
+		actionContainer(Core::Constants::MENU_BAR);
+	Core::ActionContainer* acMHelp = Core::ActionManager::
+		actionContainer(Core::Constants::M_HELP);
+	acMenuBar->addMenu(acMHelp, menu);
 	return true;
 }
 
@@ -85,8 +115,7 @@ ExtensionSystem::IPlugin::ShutdownFlag QRealPlugin::aboutToShutdown()
 
 void QRealPlugin::triggerAction()
 {
-	QMessageBox::information(Core::ICore::mainWindow(),
-	                         tr("Action triggered"),
-	                         tr("This is an action from QReal."));
+	QMessageBox::information(Core::ICore::mainWindow()
+		, tr("Action triggered") //title
+		, tr("This is an action from QReal.")); //message inside messagebox
 }
-

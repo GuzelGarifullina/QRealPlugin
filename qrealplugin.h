@@ -17,11 +17,12 @@
 #include "qreal_global.h"
 
 #include <extensionsystem/iplugin.h>
+#include <QSettings>
 
-namespace QReal {
-namespace Internal {
+namespace QReal{
+namespace Internal{
 
-class QRealPlugin : public ExtensionSystem::IPlugin
+class QRealPlugin: public ExtensionSystem::IPlugin
 {
 	Q_OBJECT
 	Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QtCreatorPlugin" FILE "QReal.json")
@@ -33,6 +34,9 @@ public:
 	bool initialize(const QStringList &arguments, QString *errorString);
 	void extensionsInitialized();
 	ShutdownFlag aboutToShutdown();
+	void slotObjectAdded(QObject * obj);
+private:
+	 QSettings *settings;
 
 private slots:
 	void triggerAction();
