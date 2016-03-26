@@ -27,16 +27,16 @@ public:
 	~qRealCoreSettings();
 
 	//change qreal plugin settings
-	void saveToSettings() const;
+	void saveSettings() const;
 
 	//load default settings on first startup
 	//plugin and system
 	void loadDefaultSettings();
 private:
-	QSettings *settings;
-	bool isFirtTimeLoaded();
-	void loadDefaultPluginSettings();
-	void loadDefaultSystemSettings();
+	QSettings *m_settings;
+	bool m_isFirtTimeLoaded();
+	void m_loadDefaultPluginSettings();
+	void m_loadDefaultSystemSettings();
 signals:
 	void settingsChanged();
 //public slots:

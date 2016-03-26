@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. */
 
-//to test
+// !!to test soon will delete
 #undef QT_NO_CAST_FROM_ASCII
 #include <iostream>
 
@@ -22,61 +22,66 @@
 #include "qrealconstants.h"
 #include "qRealCoreSettings.h"
 
+#include <QFile>
+#include <QMessageBox>
+#include <QTextStream>
+
 using namespace QReal;
 
 qRealCoreSettings::qRealCoreSettings()
 {
-	settings = Core::ICore::settings();
+	m_settings = Core::ICore::settings();
 }
 qRealCoreSettings::~qRealCoreSettings(){
-	//delete (settings);
+	//nothing to do there
 }
 
-void qRealCoreSettings::saveToSettings() const{
+void qRealCoreSettings::saveSettings() const{
+	//nothing to do there
 }
 
 void qRealCoreSettings::loadDefaultSettings(){
-	if (isFirtTimeLoaded()){
-		loadDefaultPluginSettings();
-		loadDefaultSystemSettings();
-		settings->sync();
+	if (m_isFirtTimeLoaded()){
+		m_loadDefaultPluginSettings();
+		m_loadDefaultSystemSettings();
+		m_settings->sync();
 	}
 }
-void qRealCoreSettings::loadDefaultPluginSettings(){
-	settings->beginGroup(QLatin1String(Constants::CORE_SETTINGS_GROUP));
+void qRealCoreSettings::m_loadDefaultPluginSettings(){
+	m_settings->beginGroup(QLatin1String(Constants::CORE_SETTINGS_GROUP));
 	//new settings go here, abcde - is just an example
-	settings->setValue(QLatin1String("abcde"), 0);
-	settings->endGroup();
+	m_settings->setValue(QLatin1String("abcde"), 0);
+	m_settings->endGroup();
 }
-void qRealCoreSettings::loadDefaultSystemSettings(){
-	const int MAX_CHARS_PER_LINE = 512;
-	std::string fileName ="/home/guzel/Programming/all/lol/readFromFile/data.txt";
-
-	std::ifstream fin;
-	fin.open(fileName); // open a file
-	if (!fin.good()){
-		std::cout << "Error when open file";
-		return; // exit if file not found
+void qRealCoreSettings::m_loadDefaultSystemSettings(){
+	// !change to build dir
+	QString fileName ="/home/guzel/Programming/all/lol/readFromFile/data.txt";
+	QFile file(fileName);
+	if(!file.open(QIODevice::ReadOnly)){
+		// !!need normal message, soon delete
+		QMessageBox::information(0,"error",file.errorString());
 	}
-	char lineBuf[MAX_CHARS_PER_LINE] = "";
+
+	QTextStream inStream(&file);
+
 	QString group ="";
 	QString groupX="";
 	QString name="";
 	QString value="";
 	int pos = 0;
-	while (fin.getline(lineBuf, MAX_CHARS_PER_LINE))
+	while (!inStream.atEnd())
 	{
-		QString line = QString(lineBuf);
+		QString line = inStream.readLine();
 		pos = line.indexOf(']');
 		if (line.indexOf('[') == 0
 			&& pos > 0)
 		{
 			groupX = line.mid(1, pos -1);
 			if (group != ""){
-				settings->endGroup();
+				m_settings->endGroup();
 			}
 			group = groupX;
-			settings->beginGroup(group);
+			m_settings->beginGroup(group);
 		}
 		else
 		{
@@ -84,19 +89,19 @@ void qRealCoreSettings::loadDefaultSystemSettings(){
 			if (pos > 0) {
 				name = line.left(pos);
 				value = line.mid(pos+1, line.length()-1);
-				settings->setValue(name, value);
+				m_settings->setValue(name, value);
 			}
 		}
 	}
-	settings->endGroup();
+	m_settings->endGroup();
 }
-bool qRealCoreSettings::isFirtTimeLoaded(){
-	settings->beginGroup(QLatin1String(Constants::CORE_SETTINGS_GROUP));
-	bool res=settings->contains(QLatin1String("abcd"));
+bool qRealCoreSettings::m_isFirtTimeLoaded(){
+	m_settings->beginGroup(QLatin1String(Constants::CORE_SETTINGS_GROUP));
+	bool res=m_settings->contains(QLatin1String("abcd"));
 	if (!res){
 		std::cout<< "first time settings loaded";
 	}
-	settings->endGroup();
+	m_settings->endGroup();
 	return res;
 }
 
