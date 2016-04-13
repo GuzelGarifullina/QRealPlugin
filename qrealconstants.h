@@ -24,8 +24,8 @@ const char CORE_SETTINGS_GROUP []= "QRealPlugin";
 const char CORE_SETTINGS_TO_LOAD_SETTINGS []= "isFirstTimeLoaded";
 
 const char PLUGIN_PATH []= "../qRealPlugin";
-const char SETTINGS_DIRNAME[]= "load";
-const char DEFAULT_SETTINGS_FILENAME []= "defaultSettings.txt";
+const char SETTINGS_DIRNAME[]= "gitignore/load";
+const char DEFAULT_SETTINGS_FILENAME []= "defaultSettings.ini";
 
 } // namespace QReal
 } // namespace Constants

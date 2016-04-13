@@ -20,8 +20,7 @@
 #include "qrealconstants.h"
 #include "qRealCoreSettings.h"
 
-#include <QFile>
-#include <QDir>
+#include <QFileInfo>
 #include <QMessageBox>
 #include <QTextStream>
 #include <QDebug>
@@ -62,41 +61,16 @@ void qRealCoreSettings::m_loadDefaultSystemSettings()
 	QString fileDir = QLatin1String(Constants::PLUGIN_PATH) + QLatin1Char('/') +
 		QLatin1String(Constants::SETTINGS_DIRNAME) + QLatin1Char('/') +
 		QLatin1String(Constants::DEFAULT_SETTINGS_FILENAME);
-	QFile file(fileDir);
-	bool fileOpened = file.open(QIODevice::ReadOnly);
 
-	Q_ASSERT(fileOpened);
+	Q_ASSERT(QFileInfo::exists(fileDir));
 
-	QTextStream inStream(&file);
-
-	bool isFirstGroup = true;
-	QString group = "";
-	QString name = "";
-	QString value = "";
-	int pos = 0;
-	while (!inStream.atEnd()) {
-		QString line = inStream.readLine();
-		pos = line.indexOf(']');
-		if (line.indexOf('[') == 0
-			&& pos > 0) {
-			group = line.mid(1, pos - 1);
-			if (!isFirstGroup) {
-				m_settings->endGroup();
-			}else {
-				isFirstGroup = false;
-			}
-			m_settings->beginGroup(group);
-		}else {
-			pos = line.indexOf('=');
-			if (pos > 0) {
-				name = line.left(pos);
-				value = line.mid(pos + 1, line.length() - 1);
-				m_settings->setValue(name, value);
-			}
-		}
+	QSettings defaultSettings(fileDir, QSettings::IniFormat);
+	QStringList keysList = defaultSettings.allKeys();
+	for (int i = 0; i < keysList.size(); ++i) {
+		QString key = keysList.at(i);
+		QVariant value = defaultSettings.value(key);
+		m_settings->setValue(key, value);
 	}
-	m_settings->endGroup();
-	file.close();
 }
 bool qRealCoreSettings::m_isFirtTimeLoaded()
 {
