@@ -19,6 +19,10 @@
 
 #include <QSettings>
 
+namespace QReal{
+namespace Internal{
+
+
 class qRealCoreSettings: public QObject
 {
 	Q_OBJECT
@@ -39,7 +43,9 @@ private:
 	void m_loadDefaultSystemSettings();
 signals:
 	void settingsChanged();
-//public slots:
 };
+
+} // namespace Internal
+} // namespace QReal
 
 

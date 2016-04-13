@@ -17,12 +17,12 @@ DEFINES += QREAL_LIBRARY
 # QReal files
 
 SOURCES += qrealplugin.cpp \
-    qRealCoreSettings.cpp
+	qRealCoreSettings.cpp
 
 HEADERS += qrealplugin.h \
-        qreal_global.h \
-        qrealconstants.h \
-    qRealCoreSettings.h
+		qreal_global.h \
+		qrealconstants.h \
+	qRealCoreSettings.h
 
 # Qt Creator linking
 
@@ -47,14 +47,19 @@ isEmpty(IDE_BUILD_TREE):IDE_BUILD_TREE=/home/guzel/Programs/qt-creator
 ###### plugin's sources.
 
 QTC_PLUGIN_NAME = QReal
-QTC_LIB_DEPENDS += \
-    # nothing here at this time
-
+QTC_LIB_DEPENDS +=  \
+	aggregation \
+	extensionsystem \
+	utils
 QTC_PLUGIN_DEPENDS += \
-    coreplugin
+	coreplugin \
+	cppeditor \
+	diffeditor \
+	projectexplorer \
+	beautifier
 
 QTC_PLUGIN_RECOMMENDS += \
-    # optional plugin dependencies. nothing here at this time
+	# optional plugin dependencies. nothing here at this time
 
 ###### End _dependencies.pri contents ######
 

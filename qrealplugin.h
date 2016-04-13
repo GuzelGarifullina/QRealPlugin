@@ -32,12 +32,12 @@ public:
 	QRealPlugin();
 	~QRealPlugin();
 
-	bool initialize(const QStringList &arguments, QString *errorString);
-	void extensionsInitialized();
-	ShutdownFlag aboutToShutdown();
-	void slotObjectAdded(QObject * obj);
+	bool initialize(const QStringList &arguments, QString *errorString) override;
+	void extensionsInitialized() override;
+	ShutdownFlag aboutToShutdown() override;
+	void slotObjectAdded(QObject * obj)	;
 private:
-	qRealCoreSettings settings;
+	qRealCoreSettings m_settings;
 
 private slots:
 	void triggerAction();

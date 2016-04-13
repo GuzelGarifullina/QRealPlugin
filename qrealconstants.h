@@ -21,6 +21,11 @@ const char ACTION_ID[] = "QReal.Action";
 const char MENU_ID[] = "QReal.Menu";
 
 const char CORE_SETTINGS_GROUP []= "QRealPlugin";
+const char CORE_SETTINGS_TO_LOAD_SETTINGS []= "isFirstTimeLoaded";
+
+const char PLUGIN_PATH []= "../qRealPlugin";
+const char SETTINGS_DIRNAME[]= "load";
+const char DEFAULT_SETTINGS_FILENAME []= "defaultSettings.txt";
 
 } // namespace QReal
 } // namespace Constants
