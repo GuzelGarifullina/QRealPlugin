@@ -22,8 +22,8 @@
 
 #include <QFileInfo>
 #include <QMessageBox>
-#include <QTextStream>
 #include <QDebug>
+#include <QtGlobal>
 
 using namespace QReal::Internal;
 
@@ -44,8 +44,9 @@ void qRealCoreSettings::saveSettings() const
 void qRealCoreSettings::loadDefaultSettings()
 {
 	if (m_isFirtTimeLoaded()) {
-		//m_loadDefaultPluginSettings();
+		m_loadDefaultPluginSettings();
 		m_loadDefaultSystemSettings();
+
 		m_settings->sync();
 	}
 }
@@ -58,25 +59,75 @@ void qRealCoreSettings::m_loadDefaultPluginSettings()
 }
 void qRealCoreSettings::m_loadDefaultSystemSettings()
 {
-	QString fileDir = QLatin1String(Constants::PLUGIN_PATH) + QLatin1Char('/') +
-		QLatin1String(Constants::SETTINGS_DIRNAME) + QLatin1Char('/') +
-		QLatin1String(Constants::DEFAULT_SETTINGS_FILENAME);
+	QString qRealPluginPath = Core::ICore::userResourcePath() + "/" +
+		+(Constants::PLUGIN_DIR);
 
-	Q_ASSERT(QFileInfo::exists(fileDir));
+	m_loadFromFile(qRealPluginPath);
+	m_loadLicense(qRealPluginPath);
+	m_loadDocumentation(qRealPluginPath);
+	m_loadBeautifierSettings();
+}
 
-	QSettings defaultSettings(fileDir, QSettings::IniFormat);
+void qRealCoreSettings::m_loadFromFile(QString qRealPluginPath)
+{
+	QString settingsPath = qRealPluginPath + "/"
+		+ (Constants::DEFAULT_SETTINGS_FILENAME);
+
+	Q_ASSERT(QFileInfo::exists(settingsPath));
+
+	QSettings defaultSettings(settingsPath, QSettings::IniFormat);
 	QStringList keysList = defaultSettings.allKeys();
+
 	for (int i = 0; i < keysList.size(); ++i) {
 		QString key = keysList.at(i);
 		QVariant value = defaultSettings.value(key);
 		m_settings->setValue(key, value);
 	}
 }
+void qRealCoreSettings::m_loadLicense(QString qRealPluginPath)
+{
+	QString licensePath = qRealPluginPath + "/"
+		+ (Constants::LICENSE_FILENAME);
+
+	Q_ASSERT(QFileInfo::exists(licensePath));
+	m_settings->setValue(Constants::CORE_SETTINGS_LICENSE, licensePath);
+}
+
+void qRealCoreSettings::m_loadDocumentation(QString qRealPluginPath)
+{
+	QString documentPath = qRealPluginPath + "/"
+		+ (Constants::DOCUMENTATION_FILENAME);
+
+	Q_ASSERT(QFileInfo::exists(documentPath));
+	QString userDocumentsString = m_settings->value(Constants::CORE_SETTINGS_DOCUMENTATION)
+		.toString();
+	// will not need as we load setting only once
+	//at first was idea not to dublicale the same files
+	QStringList userDocuments = userDocumentsString.split( ", " );
+	for (int i = 0; i < userDocuments.size(); ++i) {
+		if (userDocuments.at(i) == documentPath) {
+			return;
+		}
+	}
+	//
+
+	m_settings->setValue(Constants::CORE_SETTINGS_DOCUMENTATION
+		, QString(documentPath + " ," + userDocumentsString));
+}
+void qRealCoreSettings::m_loadBeautifierSettings()
+{
+	#ifdef Q_OS_LINUX
+	Q_ASSERT(QFileInfo::exists(Constants::BEAUTIFIER_BUILD));
+
+	m_settings->setValue(Constants::CORE_SETTINGS_BEAUTIFIER_BUILD
+		, Constants::BEAUTIFIER_BUILD);
+	#endif
+}
+
 bool qRealCoreSettings::m_isFirtTimeLoaded()
 {
 	m_settings->beginGroup(Constants::CORE_SETTINGS_GROUP);
 	bool res = !(m_settings->contains(Constants::CORE_SETTINGS_TO_LOAD_SETTINGS));
-	//res = res || !res && (m_settings->value(Constants::CORE_SETTINGS_TO_LOAD_SETTINGS).toInt());
 	if (res) {
 		qDebug() << "first time settings loaded";
 	}

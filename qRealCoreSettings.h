@@ -41,6 +41,10 @@ private:
 	bool m_isFirtTimeLoaded();
 	void m_loadDefaultPluginSettings();
 	void m_loadDefaultSystemSettings();
+	void m_loadFromFile(QString qRealPluginPath);
+	void m_loadLicense(QString qRealPluginPath);
+	void m_loadDocumentation(QString qRealPluginPath);
+	void m_loadBeautifierSettings();
 signals:
 	void settingsChanged();
 };
