@@ -39,5 +39,3 @@ const char BEAUTIFIER_BUILD [] = "/usr/bin/uncrustify";
 
 } // namespace QReal
 } // namespace Constants
-
-

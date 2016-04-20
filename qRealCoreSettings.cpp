@@ -27,9 +27,10 @@
 
 using namespace QReal::Internal;
 
-qRealCoreSettings::qRealCoreSettings()
+qRealCoreSettings::qRealCoreSettings() :
+	m_settings(Core::ICore::settings())
 {
-	m_settings = Core::ICore::settings();
+	//nothing to do there
 }
 qRealCoreSettings::~qRealCoreSettings()
 {
@@ -41,7 +42,7 @@ void qRealCoreSettings::saveSettings() const
 	//nothing to do there
 }
 
-void qRealCoreSettings::loadDefaultSettings()
+void qRealCoreSettings::loadDefaultSettings() const
 {
 	if (m_isFirtTimeLoaded()) {
 		m_loadDefaultPluginSettings();
@@ -50,17 +51,17 @@ void qRealCoreSettings::loadDefaultSettings()
 		m_settings->sync();
 	}
 }
-void qRealCoreSettings::m_loadDefaultPluginSettings()
+void qRealCoreSettings::m_loadDefaultPluginSettings() const
 {
 	m_settings->beginGroup(QLatin1String(Constants::CORE_SETTINGS_GROUP));
 	//new settings go here, now we need it only to load settings first time
 	m_settings->setValue(QLatin1String(Constants::CORE_SETTINGS_TO_LOAD_SETTINGS), 0);
 	m_settings->endGroup();
 }
-void qRealCoreSettings::m_loadDefaultSystemSettings()
+void qRealCoreSettings::m_loadDefaultSystemSettings() const
 {
-	QString qRealPluginPath = Core::ICore::userResourcePath() + "/" +
-		+(Constants::PLUGIN_DIR);
+	QString qRealPluginPath = (Core::ICore::userResourcePath()) + QLatin1Char('/')
+		+ QLatin1String(Constants::PLUGIN_DIR);
 
 	m_loadFromFile(qRealPluginPath);
 	m_loadLicense(qRealPluginPath);
@@ -68,32 +69,35 @@ void qRealCoreSettings::m_loadDefaultSystemSettings()
 	m_loadBeautifierSettings();
 }
 
-void qRealCoreSettings::m_loadFromFile(QString qRealPluginPath)
+void qRealCoreSettings::m_loadFromFile(QString qRealPluginPath) const
 {
 	QString settingsPath = qRealPluginPath + "/"
 		+ (Constants::DEFAULT_SETTINGS_FILENAME);
 
 	Q_ASSERT(QFileInfo::exists(settingsPath));
 
-	QSettings defaultSettings(settingsPath, QSettings::IniFormat);
+	QSettings defaultSettings(settingsPath
+		, QSettings::IniFormat);
 	QStringList keysList = defaultSettings.allKeys();
 
 	for (int i = 0; i < keysList.size(); ++i) {
 		QString key = keysList.at(i);
 		QVariant value = defaultSettings.value(key);
-		m_settings->setValue(key, value);
+		m_settings->setValue(key
+			, value);
 	}
 }
-void qRealCoreSettings::m_loadLicense(QString qRealPluginPath)
+void qRealCoreSettings::m_loadLicense(QString qRealPluginPath) const
 {
 	QString licensePath = qRealPluginPath + "/"
 		+ (Constants::LICENSE_FILENAME);
 
 	Q_ASSERT(QFileInfo::exists(licensePath));
-	m_settings->setValue(Constants::CORE_SETTINGS_LICENSE, licensePath);
+	m_settings->setValue(Constants::CORE_SETTINGS_LICENSE
+		, licensePath);
 }
 
-void qRealCoreSettings::m_loadDocumentation(QString qRealPluginPath)
+void qRealCoreSettings::m_loadDocumentation(QString qRealPluginPath) const
 {
 	QString documentPath = qRealPluginPath + "/"
 		+ (Constants::DOCUMENTATION_FILENAME);
@@ -114,7 +118,7 @@ void qRealCoreSettings::m_loadDocumentation(QString qRealPluginPath)
 	m_settings->setValue(Constants::CORE_SETTINGS_DOCUMENTATION
 		, QString(documentPath + " ," + userDocumentsString));
 }
-void qRealCoreSettings::m_loadBeautifierSettings()
+void qRealCoreSettings::m_loadBeautifierSettings() const
 {
 	#ifdef Q_OS_LINUX
 	Q_ASSERT(QFileInfo::exists(Constants::BEAUTIFIER_BUILD));
@@ -124,7 +128,7 @@ void qRealCoreSettings::m_loadBeautifierSettings()
 	#endif
 }
 
-bool qRealCoreSettings::m_isFirtTimeLoaded()
+bool qRealCoreSettings::m_isFirtTimeLoaded() const
 {
 	m_settings->beginGroup(Constants::CORE_SETTINGS_GROUP);
 	bool res = !(m_settings->contains(Constants::CORE_SETTINGS_TO_LOAD_SETTINGS));

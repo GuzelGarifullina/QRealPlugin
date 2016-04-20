@@ -22,8 +22,7 @@
 namespace QReal{
 namespace Internal{
 
-
-class qRealCoreSettings: public QObject
+class qRealCoreSettings : public QObject
 {
 	Q_OBJECT
 public:
@@ -35,21 +34,20 @@ public:
 
 	//load default settings on first startup
 	//plugin and system
-	void loadDefaultSettings();
+	void loadDefaultSettings() const;
 private:
 	QSettings *m_settings;
-	bool m_isFirtTimeLoaded();
-	void m_loadDefaultPluginSettings();
-	void m_loadDefaultSystemSettings();
-	void m_loadFromFile(QString qRealPluginPath);
-	void m_loadLicense(QString qRealPluginPath);
-	void m_loadDocumentation(QString qRealPluginPath);
-	void m_loadBeautifierSettings();
-signals:
-	void settingsChanged();
+	bool m_isFirtTimeLoaded() const;
+	void m_loadDefaultPluginSettings() const;
+	void m_loadDefaultSystemSettings() const;
+	void m_loadFromFile(QString qRealPluginPath) const;
+	void m_loadLicense(QString qRealPluginPath) const;
+	void m_loadDocumentation(QString qRealPluginPath) const;
+	void m_loadBeautifierSettings() const;
+/*signals:
+	//will need in future when will have plugin settings
+	void settingsChanged();*/
 };
 
 } // namespace Internal
 } // namespace QReal
-
-

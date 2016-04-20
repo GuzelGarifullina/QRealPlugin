@@ -20,6 +20,5 @@
 #  define QREALSHARED_EXPORT Q_DECL_EXPORT
 #else
 #  define QREALSHARED_EXPORT Q_DECL_IMPORT
+
 #endif
-
-
