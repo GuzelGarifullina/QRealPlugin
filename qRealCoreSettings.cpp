@@ -10,6 +10,8 @@
 #undef QT_NO_CAST_FROM_ASCII
 
 #include <coreplugin/icore.h>
+#include <coreplugin/helpmanager.h>
+
 
 #include "qrealpluginconstants.h"
 #include "qRealCoreSettings.h"
@@ -38,7 +40,7 @@ void qRealCoreSettings::saveSettings() const
 
 void qRealCoreSettings::loadDefaultSettings() const
 {
-	if (m_isFirtTimeLoaded()) {
+	if (true){//(m_isFirtTimeLoaded()) {
 		m_loadDefaultPluginSettings();
 		m_loadDefaultSystemSettings();
 
@@ -93,24 +95,15 @@ void qRealCoreSettings::m_loadLicense(QString qRealPluginPath) const
 
 void qRealCoreSettings::m_loadDocumentation(QString qRealPluginPath) const
 {
+	//loads only one file
 	QString documentPath = qRealPluginPath + "/"
 		+ (Constants::DOCUMENTATION_FILENAME);
 
 	Q_ASSERT(QFileInfo::exists(documentPath));
-	QString userDocumentsString = m_settings->value(Constants::CORE_SETTINGS_DOCUMENTATION)
-		.toString();
-	// will not need as we load setting only once
-	//at first was idea not to dublicale the same files
-	QStringList userDocuments = userDocumentsString.split( ", " );
-	for (int i = 0; i < userDocuments.size(); ++i) {
-		if (userDocuments.at(i) == documentPath) {
-			return;
-		}
-	}
-	//
 
-	m_settings->setValue(Constants::CORE_SETTINGS_DOCUMENTATION
-		, QString(documentPath + " ," + userDocumentsString));
+	QStringList doc;
+	doc.append(documentPath);
+	Core::HelpManager::registerUserDocumentation(doc);
 }
 void qRealCoreSettings::m_loadBeautifierSettings() const
 {
