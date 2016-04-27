@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 3.5.1, 2016-04-19T21:12:43. -->
+<!-- Written by QtCreator 3.5.1, 2016-04-27T21:20:07. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -35,7 +35,7 @@
    <value type="bool" key="EditorConfiguration.KeyboardTooltips">false</value>
    <value type="int" key="EditorConfiguration.MarginColumn">80</value>
    <value type="bool" key="EditorConfiguration.MouseHiding">true</value>
-   <value type="bool" key="EditorConfiguration.MouseNavigation">true</value>
+   <value type="bool" key="EditorConfiguration.MouseNavigation">false</value>
    <value type="int" key="EditorConfiguration.PaddingMode">1</value>
    <value type="bool" key="EditorConfiguration.ScrollWheelZooming">true</value>
    <value type="bool" key="EditorConfiguration.ShowMargin">false</value>
@@ -48,17 +48,12 @@
    <value type="bool" key="EditorConfiguration.addFinalNewLine">true</value>
    <value type="bool" key="EditorConfiguration.cleanIndentation">true</value>
    <value type="bool" key="EditorConfiguration.cleanWhitespace">true</value>
-   <value type="bool" key="EditorConfiguration.inEntireDocument">false</value>
+   <value type="bool" key="EditorConfiguration.inEntireDocument">true</value>
   </valuemap>
  </data>
  <data>
   <variable>ProjectExplorer.Project.PluginSettings</variable>
-  <valuemap type="QVariantMap">
-   <valuemap type="QVariantMap" key="ClangProjectSettings">
-    <value type="QString" key="CustomPchFile"></value>
-    <value type="int" key="PchUsage">1</value>
-   </valuemap>
-  </valuemap>
+  <valuemap type="QVariantMap"/>
  </data>
  <data>
   <variable>ProjectExplorer.Project.Target.0</variable>

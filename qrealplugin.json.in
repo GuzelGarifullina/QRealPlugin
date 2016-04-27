@@ -1,0 +1,12 @@
+{
+    \"Name\" : \"qrealplugin\",
+    \"Version\" : \"0.0.1\",
+    \"CompatVersion\" : \"0.0.1\",
+    \"Vendor\" : \"qReal\",
+    \"Copyright\" : \"(C) qReal\",
+    \"License\" : \"GNU Lesser General Public License v3.0\",
+    \"Description\" : \"QRealPlugin optimizes the development process of QReal.\",
+    \"Url\" : \"https://github.com/qreal/qreal\",
+    $$dependencyList
+}
+
