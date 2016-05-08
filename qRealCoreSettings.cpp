@@ -20,6 +20,7 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QtGlobal>
+#include <QDir>
 
 using namespace QReal::Internal;
 
@@ -38,14 +39,13 @@ void qRealCoreSettings::saveSettings() const
 	//nothing to do there
 }
 
-void qRealCoreSettings::loadDefaultSettings() const
+void qRealCoreSettings::loadOnStartUp() const
 {
-	if (true){//(m_isFirtTimeLoaded()) {
+	/*if (m_isFirtTimeLoaded()) {
 		m_loadDefaultPluginSettings();
-		m_loadDefaultSystemSettings();
+	}*/
+	m_loadDocumentation(m_qRealPluginPath);
 
-		m_settings->sync();
-	}
 }
 void qRealCoreSettings::m_loadDefaultPluginSettings() const
 {
@@ -53,18 +53,19 @@ void qRealCoreSettings::m_loadDefaultPluginSettings() const
 	//new settings go here, now we need it only to load settings first time
 	m_settings->setValue(QLatin1String(Constants::CORE_SETTINGS_TO_LOAD_SETTINGS), 0);
 	m_settings->endGroup();
+	m_settings->sync();
 }
+
+
+// !! add button
 void qRealCoreSettings::m_loadDefaultSystemSettings() const
 {
-	QString qRealPluginPath = (Core::ICore::userResourcePath()) + QLatin1Char('/')
-		+ QLatin1String(Constants::PLUGIN_DIR);
-
-	m_loadFromFile(qRealPluginPath);
-	m_loadLicense(qRealPluginPath);
-	m_loadDocumentation(qRealPluginPath);
+	m_loadFromFile(m_qRealPluginPath);
+	m_loadLicense(m_qRealPluginPath);
 	m_loadBeautifierSettings();
 }
 
+// !!!! rename
 void qRealCoreSettings::m_loadFromFile(QString qRealPluginPath) const
 {
 	QString settingsPath = qRealPluginPath + "/"
@@ -82,7 +83,9 @@ void qRealCoreSettings::m_loadFromFile(QString qRealPluginPath) const
 		m_settings->setValue(key
 			, value);
 	}
+	m_settings->sync();
 }
+
 void qRealCoreSettings::m_loadLicense(QString qRealPluginPath) const
 {
 	QString licensePath = qRealPluginPath + "/"
@@ -91,20 +94,30 @@ void qRealCoreSettings::m_loadLicense(QString qRealPluginPath) const
 	Q_ASSERT(QFileInfo::exists(licensePath));
 	m_settings->setValue(Constants::CORE_SETTINGS_LICENSE
 		, licensePath);
+	m_settings->sync();
 }
 
+
+// loads all .qhc files from documentation dir
 void qRealCoreSettings::m_loadDocumentation(QString qRealPluginPath) const
 {
-	//loads only one file
-	QString documentPath = qRealPluginPath + "/"
-		+ (Constants::DOCUMENTATION_FILENAME);
+	QString documentsPath = qRealPluginPath + "/"
+			+ (Constants::DOCUMENTATION_DIR);
 
-	Q_ASSERT(QFileInfo::exists(documentPath));
+	Q_ASSERT(QFileInfo::exists(documentsPath));
+
+	QDir dir(documentsPath);
+	QStringList nameFilter("*.qch");
 
 	QStringList doc;
-	doc.append(documentPath);
-	Core::HelpManager::registerUserDocumentation(doc);
+	foreach(QFileInfo item, dir.entryInfoList(nameFilter) ){
+		doc << item.absoluteFilePath();
+	}
+	Core::HelpManager::registerDocumentation(doc);
 }
+
+// look for other builds
+// dont need it?
 void qRealCoreSettings::m_loadBeautifierSettings() const
 {
 	#ifdef Q_OS_LINUX

@@ -11,8 +11,15 @@
 namespace QReal {
 namespace Constants {
 
-const char ACTION_ID[] = "qrealplugin.Action";
-const char MENU_ID[] = "qrealplugin.Menu";
+//const char ACTION_ID[] = "qrealplugin.Action";
+
+const char DISPLAY_NAME[] = "QReal";
+const char MENU_ID[] = "QReal.Menu";
+const char ACTION_CHECKFILE[]     = "QReal.CheckFile";
+const char ACTION_CHECKPROJECT[] = "QReal.CheckProject";
+
+const char MSG_ACTION_CHECKFILE[]     = "Check File";
+const char MSG_ACTION_CHECKPROJECT[] = "Check Project";
 
 const char CORE_SETTINGS_GROUP [] = "QRealPlugin";
 const char CORE_SETTINGS_TO_LOAD_SETTINGS [] = "isFirstTimeLoaded";
@@ -27,7 +34,8 @@ const char CORE_SETTINGS_BEAUTIFIER_BUILD[] = "Beautifier/uncrustify/command";
 const char PLUGIN_DIR [] = "qRealPlugin";
 const char DEFAULT_SETTINGS_FILENAME [] = "defaultSettings.ini";
 const char LICENSE_FILENAME [] = "license.txt";
-const char DOCUMENTATION_FILENAME [] = "qrgui.qch";
+const char DOCUMENTATION_DIR [] = "documentation";
+
 //only for Linux, and it is not always
 const char BEAUTIFIER_BUILD [] = "/usr/bin/uncrustify";
 

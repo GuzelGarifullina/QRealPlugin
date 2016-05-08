@@ -9,9 +9,11 @@
 #pragma once
 
 #include <QtCore/qglobal.h>
+#include <coreplugin/icore.h>
 #include <QObject>
-
 #include <QSettings>
+
+#include "qrealpluginconstants.h"
 
 namespace QReal{
 namespace Internal{
@@ -28,7 +30,7 @@ public:
 
 	//load default settings on first startup
 	//plugin and system
-	void loadDefaultSettings() const;
+	void loadOnStartUp() const;
 private:
 	QSettings *m_settings;
 	bool m_isFirtTimeLoaded() const;
@@ -38,6 +40,8 @@ private:
 	void m_loadLicense(QString qRealPluginPath) const;
 	void m_loadDocumentation(QString qRealPluginPath) const;
 	void m_loadBeautifierSettings() const;
+	const QString m_qRealPluginPath = (Core::ICore::userResourcePath()) + QLatin1Char('/')
+		+ QLatin1String(Constants::PLUGIN_DIR);
 /*signals:
 	//will need in future when will have plugin settings
 	void settingsChanged();*/

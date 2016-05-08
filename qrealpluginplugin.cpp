@@ -50,25 +50,44 @@ bool QRealPlugin::initialize(const QStringList &arguments, QString *errorString)
 	// Register objects in the plugin manager's object pool
 	// Load settings
 
-	m_settings.loadDefaultSettings();
+	m_settings.loadOnStartUp();
 
 	// Add actions to menus
 	// Connect to other plugins' signals
 	// In the initialize function, a plugin can be sure that the plugins it
 	// depends on have initialized their members.
 
-	QAction * action = new QAction(tr("QReal actions"), this);
-	Core::Command *cmd = Core::ActionManager::registerAction(action
-			, Constants::ACTION_ID
-			, Core::Context(Core::Constants::C_GLOBAL));
-	cmd->setDefaultKeySequence(QKeySequence(tr("Ctrl+Alt+Meta+A")));
-	connect(action, SIGNAL(triggered()), this, SLOT(triggerAction()));
 	Core::ActionContainer *menu = Core::ActionManager::createMenu
 			(Constants::MENU_ID);
-	menu->menu()->setTitle(tr("QReal"));
-	menu->addAction(cmd);
-	Core::ActionManager::actionContainer(Core::Constants::M_TOOLS)->addMenu(menu);
+	menu->menu()->setTitle(tr(Constants::DISPLAY_NAME));
 
+	QAction * checkFileAction = new QAction(
+				tr(Constants::MSG_ACTION_CHECKFILE)
+											, this);
+	Core::Command *cmd = Core::ActionManager::registerAction(checkFileAction
+			, Constants::ACTION_CHECKFILE
+			, Core::Context(Core::Constants::C_GLOBAL));
+	//cmd->setDefaultKeySequence(QKeySequence(tr("Ctrl+Alt+Meta+A")));
+	menu->addAction(cmd);
+	connect(checkFileAction, SIGNAL(triggered()), this, SLOT(triggerAction()));
+
+
+	QAction * checkProjectAction = new QAction(
+				tr(Constants::MSG_ACTION_CHECKPROJECT)
+											, this);
+	cmd = Core::ActionManager::registerAction(checkProjectAction
+			, Constants::ACTION_CHECKPROJECT
+			, Core::Context(Core::Constants::C_GLOBAL));
+	//cmd->setDefaultKeySequence(QKeySequence(tr("Ctrl+Alt+Meta+A")));
+	//menu->addSeparator();
+	menu->addAction(cmd);
+	connect(checkProjectAction, SIGNAL(triggered()), this, SLOT(triggerAction()));
+
+
+	//menu->menu()->setTearOffEnabled(true);
+
+
+	Core::ActionManager::actionContainer(Core::Constants::M_TOOLS)->addMenu(menu);
 	return true;
 }
 
