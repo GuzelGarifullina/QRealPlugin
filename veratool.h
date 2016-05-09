@@ -24,9 +24,12 @@ private:
 	QStringList m_basicOptions;
 	const QString m_command =  QLatin1String("vera++"); //"echo";
 	const QString m_dir = QLatin1String("/home/guzel/Programming/qRealPlugin");
+	QString m_getOpenedFile() const ;
+	QStringList m_getOpenedProjectFiles() const;
+
 private slots:
 	void checkFile();
-	void checkProject() const;
+	void checkProject();
 
 };
 

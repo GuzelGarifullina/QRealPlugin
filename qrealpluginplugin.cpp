@@ -86,7 +86,7 @@ bool QRealPlugin::initialize(const QStringList &arguments, QString *errorString)
 	//cmd->setDefaultKeySequence(QKeySequence(tr("Ctrl+Alt+Meta+A")));
 	//menu->addSeparator();
 	menu->addAction(cmd);
-	connect(checkProjectAction, SIGNAL(triggered()), this, SLOT(triggerAction()));
+	connect(checkProjectAction, SIGNAL(triggered()), m_vera, SLOT(checkProject()));
 
 
 	//menu->menu()->setTearOffEnabled(true);
@@ -111,15 +111,7 @@ ExtensionSystem::IPlugin::ShutdownFlag QRealPlugin::aboutToShutdown()
 
 //shows in general message
 void QRealPlugin::showOutput(const QString &error, const QString &context)
-{	Core::MessageManager::write((context + error));
-	//Core::MessageManager::write(tr("Error in Beautifier: %1").arg(error.trimmed()));
-}
-
-
-void QRealPlugin::triggerAction()
 {
-	QMessageBox::information(Core::ICore::mainWindow()
-		, tr("Action triggered") //title
-		, tr("This is an action from QReal.")); //message inside messagebox
+	Core::MessageManager::write((context + error));
 }
 

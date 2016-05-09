@@ -33,9 +33,6 @@ public:
 private:
 	qRealCoreSettings m_settings;
 	VeraTool *m_vera;
-
-private slots:
-	void triggerAction();
 };
 
 } // namespace Internal
