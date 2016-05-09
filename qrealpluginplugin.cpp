@@ -18,6 +18,7 @@
 #include <coreplugin/actionmanager/command.h>
 #include <coreplugin/actionmanager/actioncontainer.h>
 #include <coreplugin/coreconstants.h>
+#include <coreplugin/messagemanager.h>
 #include <extensionsystem/pluginmanager.h>
 #include <extensionsystem/pluginspec.h>
 
@@ -33,12 +34,14 @@ QRealPlugin::QRealPlugin() :
 	m_settings()
 {
 	// Create your members
+	m_vera = new VeraTool();
 }
 
 QRealPlugin::~QRealPlugin()
 {
 	// Unregister objects from the plugin manager's object pool
 	// Delete members
+	delete (m_vera);
 }
 
 bool QRealPlugin::initialize(const QStringList &arguments, QString *errorString)
@@ -60,21 +63,23 @@ bool QRealPlugin::initialize(const QStringList &arguments, QString *errorString)
 	Core::ActionContainer *menu = Core::ActionManager::createMenu
 			(Constants::MENU_ID);
 	menu->menu()->setTitle(tr(Constants::DISPLAY_NAME));
+	menu->setOnAllDisabledBehavior(Core::ActionContainer::Show);
+	Core::ActionManager::actionContainer(Core::Constants::M_TOOLS)->addMenu(menu);
 
 	QAction * checkFileAction = new QAction(
-				tr(Constants::MSG_ACTION_CHECKFILE)
-											, this);
+			tr(Constants::MSG_ACTION_CHECKFILE)
+			, this);
 	Core::Command *cmd = Core::ActionManager::registerAction(checkFileAction
 			, Constants::ACTION_CHECKFILE
 			, Core::Context(Core::Constants::C_GLOBAL));
 	//cmd->setDefaultKeySequence(QKeySequence(tr("Ctrl+Alt+Meta+A")));
 	menu->addAction(cmd);
-	connect(checkFileAction, SIGNAL(triggered()), this, SLOT(triggerAction()));
+	connect(checkFileAction, SIGNAL(triggered()), m_vera, SLOT(checkFile()));
 
 
 	QAction * checkProjectAction = new QAction(
-				tr(Constants::MSG_ACTION_CHECKPROJECT)
-											, this);
+			tr(Constants::MSG_ACTION_CHECKPROJECT)
+			, this);
 	cmd = Core::ActionManager::registerAction(checkProjectAction
 			, Constants::ACTION_CHECKPROJECT
 			, Core::Context(Core::Constants::C_GLOBAL));
@@ -86,8 +91,6 @@ bool QRealPlugin::initialize(const QStringList &arguments, QString *errorString)
 
 	//menu->menu()->setTearOffEnabled(true);
 
-
-	Core::ActionManager::actionContainer(Core::Constants::M_TOOLS)->addMenu(menu);
 	return true;
 }
 
@@ -105,6 +108,13 @@ ExtensionSystem::IPlugin::ShutdownFlag QRealPlugin::aboutToShutdown()
 	// Hide UI (if you add UI that is not in the main window directly)
 	return SynchronousShutdown;
 }
+
+//shows in general message
+void QRealPlugin::showOutput(const QString &error, const QString &context)
+{	Core::MessageManager::write((context + error));
+	//Core::MessageManager::write(tr("Error in Beautifier: %1").arg(error.trimmed()));
+}
+
 
 void QRealPlugin::triggerAction()
 {

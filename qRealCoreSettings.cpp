@@ -42,8 +42,9 @@ void qRealCoreSettings::saveSettings() const
 void qRealCoreSettings::loadOnStartUp() const
 {
 	/*if (m_isFirtTimeLoaded()) {
-		m_loadDefaultPluginSettings();
+
 	}*/
+	m_loadDefaultPluginSettings();
 	m_loadDocumentation(m_qRealPluginPath);
 
 }
@@ -51,7 +52,8 @@ void qRealCoreSettings::m_loadDefaultPluginSettings() const
 {
 	m_settings->beginGroup(QLatin1String(Constants::CORE_SETTINGS_GROUP));
 	//new settings go here, now we need it only to load settings first time
-	m_settings->setValue(QLatin1String(Constants::CORE_SETTINGS_TO_LOAD_SETTINGS), 0);
+	m_settings->setValue(QLatin1String(Constants::CORE_SETTINGS_TO_LOAD_SETTINGS),
+						QVariant(false));
 	m_settings->endGroup();
 	m_settings->sync();
 }
@@ -107,10 +109,11 @@ void qRealCoreSettings::m_loadDocumentation(QString qRealPluginPath) const
 	Q_ASSERT(QFileInfo::exists(documentsPath));
 
 	QDir dir(documentsPath);
-	QStringList nameFilter("*.qch");
 
+	auto items = dir.entryInfoList(
+		{"*.qch"}, QDir::Files | QDir::Readable | QDir::NoDotAndDotDot);
 	QStringList doc;
-	foreach(QFileInfo item, dir.entryInfoList(nameFilter) ){
+	foreach(QFileInfo item, items){
 		doc << item.absoluteFilePath();
 	}
 	Core::HelpManager::registerDocumentation(doc);

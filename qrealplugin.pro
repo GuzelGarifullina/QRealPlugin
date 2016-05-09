@@ -7,18 +7,19 @@
 #     http://www.gnu.org/licenses/gpl-3.0.en.html
 #
 
-
 DEFINES += QREALPLUGIN_LIBRARY
 
 # qrealplugin files
 
 SOURCES += qrealpluginplugin.cpp \
-	qRealCoreSettings.cpp
+	qRealCoreSettings.cpp \
+	veratool.cpp
 
 HEADERS += qrealpluginplugin.h \
 		qrealplugin_global.h \
 		qrealpluginconstants.h \
-	qRealCoreSettings.h
+	qRealCoreSettings.h \
+	veratool.h
 
 # Qt Creator linking
 QMAKE_CXXFLAGS += -Wall -Wextra -pedantic -Weffc++ -Wold-style-cast

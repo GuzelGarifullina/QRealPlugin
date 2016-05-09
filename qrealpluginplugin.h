@@ -9,6 +9,7 @@
 
 #include "qrealplugin_global.h"
 #include "qRealCoreSettings.h"
+#include "veratool.h"
 
 #include <extensionsystem/iplugin.h>
 #include <QSettings>
@@ -28,9 +29,10 @@ public:
 	bool initialize(const QStringList &arguments, QString *errorString) override;
 	void extensionsInitialized() override;
 	ShutdownFlag aboutToShutdown() override;
-	void slotObjectAdded(QObject * obj)	;
+	static void showOutput(const QString &error, const QString &context);
 private:
 	qRealCoreSettings m_settings;
+	VeraTool *m_vera;
 
 private slots:
 	void triggerAction();
