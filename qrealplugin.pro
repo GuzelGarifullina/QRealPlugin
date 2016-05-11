@@ -13,13 +13,15 @@ DEFINES += QREALPLUGIN_LIBRARY
 
 SOURCES += qrealpluginplugin.cpp \
 	qRealCoreSettings.cpp \
-	veratool.cpp
+	veratool.cpp \
+	verasettings.cpp
 
 HEADERS += qrealpluginplugin.h \
 		qrealplugin_global.h \
 		qrealpluginconstants.h \
 	qRealCoreSettings.h \
-	veratool.h
+	veratool.h \
+	verasettings.h
 
 # Qt Creator linking
 QMAKE_CXXFLAGS += -Wall -Wextra -pedantic -Weffc++ -Wold-style-cast

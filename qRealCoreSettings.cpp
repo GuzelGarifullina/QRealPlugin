@@ -24,8 +24,7 @@
 
 using namespace QReal::Internal;
 
-qRealCoreSettings::qRealCoreSettings() :
-	m_settings(Core::ICore::settings())
+qRealCoreSettings::qRealCoreSettings()
 {
 	//nothing to do there
 }
@@ -34,30 +33,10 @@ qRealCoreSettings::~qRealCoreSettings()
 	//nothing to do there
 }
 
-void qRealCoreSettings::saveSettings() const
-{
-	//nothing to do there
-}
-
 void qRealCoreSettings::loadOnStartUp() const
 {
-	/*if (m_isFirtTimeLoaded()) {
-
-	}*/
-	m_loadDefaultPluginSettings();
 	m_loadDocumentation(m_qRealPluginPath);
-
 }
-void qRealCoreSettings::m_loadDefaultPluginSettings() const
-{
-	m_settings->beginGroup(QLatin1String(Constants::CORE_SETTINGS_GROUP));
-	//new settings go here, now we need it only to load settings first time
-	m_settings->setValue(QLatin1String(Constants::CORE_SETTINGS_TO_LOAD_SETTINGS),
-						QVariant(false));
-	m_settings->endGroup();
-	m_settings->sync();
-}
-
 
 // !! add button
 void qRealCoreSettings::m_loadDefaultSystemSettings() const
@@ -79,13 +58,15 @@ void qRealCoreSettings::m_loadFromFile(QString qRealPluginPath) const
 		, QSettings::IniFormat);
 	QStringList keysList = defaultSettings.allKeys();
 
+	QSettings *s = Core::ICore::settings();
+
 	for (int i = 0; i < keysList.size(); ++i) {
 		QString key = keysList.at(i);
 		QVariant value = defaultSettings.value(key);
-		m_settings->setValue(key
+		s->setValue(key
 			, value);
 	}
-	m_settings->sync();
+	s->sync();
 }
 
 void qRealCoreSettings::m_loadLicense(QString qRealPluginPath) const
@@ -94,11 +75,12 @@ void qRealCoreSettings::m_loadLicense(QString qRealPluginPath) const
 		+ (Constants::LICENSE_FILENAME);
 
 	Q_ASSERT(QFileInfo::exists(licensePath));
-	m_settings->setValue(Constants::CORE_SETTINGS_LICENSE
-		, licensePath);
-	m_settings->sync();
-}
 
+	QSettings *s = Core::ICore::settings();
+	s->setValue(Constants::CORE_SETTINGS_LICENSE
+		, licensePath);
+	s->sync();
+}
 
 // loads all .qhc files from documentation dir
 void qRealCoreSettings::m_loadDocumentation(QString qRealPluginPath) const
@@ -126,18 +108,10 @@ void qRealCoreSettings::m_loadBeautifierSettings() const
 	#ifdef Q_OS_LINUX
 	Q_ASSERT(QFileInfo::exists(Constants::BEAUTIFIER_BUILD));
 
-	m_settings->setValue(Constants::CORE_SETTINGS_BEAUTIFIER_BUILD
+	QSettings *s = Core::ICore::settings();
+	s->setValue(Constants::CORE_SETTINGS_BEAUTIFIER_BUILD
 		, Constants::BEAUTIFIER_BUILD);
+	s->sync();
 	#endif
 }
 
-bool qRealCoreSettings::m_isFirtTimeLoaded() const
-{
-	m_settings->beginGroup(Constants::CORE_SETTINGS_GROUP);
-	bool res = !(m_settings->contains(Constants::CORE_SETTINGS_TO_LOAD_SETTINGS));
-	if (res) {
-		qDebug() << "first time settings loaded";
-	}
-	m_settings->endGroup();
-	return res;
-}

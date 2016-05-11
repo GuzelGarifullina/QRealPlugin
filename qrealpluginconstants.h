@@ -22,7 +22,7 @@ const char MSG_ACTION_CHECKFILE[]     = "Check File";
 const char MSG_ACTION_CHECKPROJECT[] = "Check Project";
 
 const char CORE_SETTINGS_GROUP [] = "QRealPlugin";
-const char CORE_SETTINGS_TO_LOAD_SETTINGS [] = "isFirstTimeLoaded";
+const char CORE_VERA_RULES [] = "VeraRule";
 
 // need to load settings
 const char CORE_SETTINGS_LICENSE[] = "CppTools/LicenseTemplate";

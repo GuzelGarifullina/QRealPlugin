@@ -9,7 +9,6 @@
 #undef QT_NO_CAST_FROM_ASCII
 
 #include "veratool.h"
-#include <QDebug>
 #include <QString>
 #include <QProcess>
 #include "qrealpluginplugin.h"
@@ -22,19 +21,30 @@
 
 
 using namespace QReal::Internal;
-VeraTool::VeraTool()
+VeraTool::VeraTool():
+	m_veraSettings(new VeraSettings())
 {
 	//m_basicOptions << "--root" << m_dir;
 	// <<"--profile" << "allRules";
+	QString dir = QString("/home/guzel/Programming/qRealPlugin/gitignore/buildScripts/vera++/profiles/allRules");
+	m_veraSettings->setRules(dir);
+	m_basicOptions = m_veraSettings->veraOptions();
 }
+VeraTool::~VeraTool(){
+	delete m_veraSettings;
+}
+
 void VeraTool::checkFile()
 {
-	QString dir = "/home/guzel/Programming/qRealPlugin";
-	QString file = dir + "/qRealCoreSettings.cpp";
+	if (!QFile::exists(m_command)){
+		//show error message
+		return;
+	}
+	QString file = m_getOpenedFile();
 	QStringList fileOp = QStringList(file);
 	QProcess process;
 
-	process.start(m_command, m_basicOptions + fileOp);
+	process.start(m_command , m_basicOptions + fileOp);
 	process.waitForFinished(2000);
 
 	QString error = process.readAllStandardError();
