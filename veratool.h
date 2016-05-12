@@ -31,6 +31,7 @@ private:
 	const QString m_dir = QLatin1String("/home/guzel/Programming/qRealPlugin");
 	QString m_getOpenedFile() const ;
 	QStringList m_getOpenedProjectFiles() const;
+	bool m_checkFile(QString file);
 
 private slots:
 	void checkCurrentFile();

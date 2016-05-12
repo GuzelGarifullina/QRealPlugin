@@ -44,6 +44,13 @@ void VeraTool::checkCurrentFile()
 		return;
 	}
 	QString file = m_getOpenedFile();
+
+	m_checkFile(file);
+}
+
+//returns if error occured
+bool VeraTool::m_checkFile(QString file)
+{
 	QStringList fileOp = QStringList(file);
 	QProcess process;
 
@@ -54,23 +61,32 @@ void VeraTool::checkCurrentFile()
 	if (!error.isEmpty()) {
 		QString context = "Error in running vera++:\n";
 		QRealPlugin::showOutput(context + error);
-		return;
+		return true;
 	}
+
 	QString output = process.readAllStandardOutput();
 	if (!output.isEmpty()) {
-		QString context = "Problems in style:\n";
+		QString context = QLatin1String("Style problems in file ")
+				+ file + QLatin1String(":\n");
 		QRealPlugin::showOutput(context + output);
-		return;
+		return false;
 	}
-	QRealPlugin::showOutput("vera++:\n"
-		+ "Everything Ok\n");
+
+	QRealPlugin::showOutput("vera++:\nEverything Ok\n");
 }
 void VeraTool::checkCurrentProject()
 {
-	/*QStringList files = m_getOpenedProjectFiles();
-	   for (QString f : files){
-		checkFile();
-	   }*/
+	if (!QFile::exists(m_command)) {
+		//show error message
+		return;
+	}
+
+	QStringList files = m_getOpenedProjectFiles();
+	for (QString f : files){
+		if (m_checkFile(f)){
+			return;
+		}
+	}
 }
 
 QString VeraTool::m_getOpenedFile() const
