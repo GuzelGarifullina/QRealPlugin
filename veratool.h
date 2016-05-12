@@ -33,8 +33,8 @@ private:
 	QStringList m_getOpenedProjectFiles() const;
 
 private slots:
-	void checkFile();
-	void checkProject();
+	void checkCurrentFile();
+	void checkCurrentProject();
 
 };
 

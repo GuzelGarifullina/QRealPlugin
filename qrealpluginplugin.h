@@ -13,6 +13,8 @@
 
 #include <extensionsystem/iplugin.h>
 #include <QSettings>
+#include <coreplugin/editormanager/editormanager.h>
+#include <coreplugin/editormanager/ieditor.h>
 
 namespace QReal{
 namespace Internal{
@@ -29,10 +31,15 @@ public:
 	bool initialize(const QStringList &arguments, QString *errorString) override;
 	void extensionsInitialized() override;
 	ShutdownFlag aboutToShutdown() override;
-	static void showOutput(const QString &error, const QString &context);
+
+	static void showOutput(const QString &output);
+public slots:
+	void updateActions(Core::IEditor *editor = nullptr);
 private:
 	qRealCoreSettings m_settings;
 	VeraTool *m_vera;
+	QAction *m_checkFileAction;
+	QAction *m_checkProjectAction;
 };
 
 } // namespace Internal

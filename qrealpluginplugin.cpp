@@ -22,6 +22,8 @@
 #include <extensionsystem/pluginmanager.h>
 #include <extensionsystem/pluginspec.h>
 
+#include <cppeditor/cppeditorconstants.h>
+
 #include <QAction>
 #include <QMessageBox>
 #include <QMainWindow>
@@ -32,86 +34,74 @@ using namespace QReal::Internal;
 
 QRealPlugin::QRealPlugin() :
 	m_settings()
+	, m_vera(new VeraTool())
 {
-	// Create your members
-	m_vera = new VeraTool();
+	//nothing to do there
 }
 
 QRealPlugin::~QRealPlugin()
 {
-	// Unregister objects from the plugin manager's object pool
-	// Delete members
 	delete (m_vera);
 }
 
 bool QRealPlugin::initialize(const QStringList &arguments, QString *errorString)
 {
-
 	Q_UNUSED(arguments)
 	Q_UNUSED(errorString)
 
-	// Register objects in the plugin manager's object pool
-	// Load settings
-
 	m_settings.loadOnStartUp();
 
-	// Add actions to menus
-	// Connect to other plugins' signals
-	// In the initialize function, a plugin can be sure that the plugins it
-	// depends on have initialized their members.
-
-	Core::ActionContainer *menu = Core::ActionManager::createMenu
-			(Constants::MENU_ID);
+	Core::ActionContainer *menu = Core::ActionManager::createMenu(Constants::MENU_ID);
 	menu->menu()->setTitle(tr(Constants::DISPLAY_NAME));
 	menu->setOnAllDisabledBehavior(Core::ActionContainer::Show);
 	Core::ActionManager::actionContainer(Core::Constants::M_TOOLS)->addMenu(menu);
 
-	QAction * checkFileAction = new QAction(
-			tr(Constants::MSG_ACTION_CHECKFILE)
-			, this);
-	Core::Command *cmd = Core::ActionManager::registerAction(checkFileAction
+	m_checkFileAction = new QAction(tr(Constants::MSG_ACTION_CHECKFILE), this);
+	Core::Command *cmd = Core::ActionManager::registerAction(m_checkFileAction
 			, Constants::ACTION_CHECKFILE
 			, Core::Context(Core::Constants::C_GLOBAL));
-	//cmd->setDefaultKeySequence(QKeySequence(tr("Ctrl+Alt+Meta+A")));
 	menu->addAction(cmd);
-	connect(checkFileAction, SIGNAL(triggered()), m_vera, SLOT(checkFile()));
+	connect(m_checkFileAction, SIGNAL(triggered()), m_vera, SLOT(checkCurrentFile()));
 
-
-	QAction * checkProjectAction = new QAction(
+	m_checkProjectAction = new QAction(
 			tr(Constants::MSG_ACTION_CHECKPROJECT)
 			, this);
-	cmd = Core::ActionManager::registerAction(checkProjectAction
+	cmd = Core::ActionManager::registerAction(m_checkProjectAction
 			, Constants::ACTION_CHECKPROJECT
 			, Core::Context(Core::Constants::C_GLOBAL));
-	//cmd->setDefaultKeySequence(QKeySequence(tr("Ctrl+Alt+Meta+A")));
-	//menu->addSeparator();
 	menu->addAction(cmd);
-	connect(checkProjectAction, SIGNAL(triggered()), m_vera, SLOT(checkProject()));
+	connect(m_checkProjectAction, SIGNAL(triggered()), m_vera, SLOT(checkCurrentProject()));
 
-
-	//menu->menu()->setTearOffEnabled(true);
+	updateActions();
 
 	return true;
 }
 
+void QRealPlugin::updateActions(Core::IEditor *editor)
+{
+	const bool enabled = (editor && editor->document()->id() == CppEditor::Constants::CPPEDITOR_ID);
+
+	m_checkFileAction->setEnabled(enabled);
+	m_checkProjectAction->setEnabled(enabled);
+}
+
+
 void QRealPlugin::extensionsInitialized()
 {
-	// Retrieve objects from the plugin manager's object pool
-	// In the extensionsInitialized function, a plugin can be sure that all
-	// plugins that depend on it are completely initialized.
+	if (const Core::EditorManager * editorManager = Core::EditorManager::instance()) {
+		connect(editorManager, &Core::EditorManager::currentEditorChanged
+			, this, &QRealPlugin::updateActions);
+	}
 }
 
 ExtensionSystem::IPlugin::ShutdownFlag QRealPlugin::aboutToShutdown()
 {
-	// Save settings
-	// Disconnect from signals that are not needed during shutdown
-	// Hide UI (if you add UI that is not in the main window directly)
 	return SynchronousShutdown;
 }
 
 //shows in general message
-void QRealPlugin::showOutput(const QString &error, const QString &context)
+void QRealPlugin::showOutput(const QString &output)
 {
-	Core::MessageManager::write((context + error));
+	Core::MessageManager::write(output);
 }
 

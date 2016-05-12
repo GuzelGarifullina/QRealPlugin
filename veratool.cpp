@@ -15,28 +15,31 @@
 
 #include <coreplugin/editormanager/editormanager.h>
 #include <coreplugin/editormanager/ieditor.h>
+
+#include <coreplugin/actionmanager/actioncontainer.h>
+
 #include <projectexplorer/projecttree.h>
 #include <projectexplorer/project.h>
 #include <utils/fileutils.h>
 
 
 using namespace QReal::Internal;
-VeraTool::VeraTool():
+VeraTool::VeraTool() :
 	m_veraSettings(new VeraSettings())
 {
-	//m_basicOptions << "--root" << m_dir;
-	// <<"--profile" << "allRules";
 	QString dir = QString("/home/guzel/Programming/qRealPlugin/gitignore/buildScripts/vera++/profiles/allRules");
+
 	m_veraSettings->setRules(dir);
 	m_basicOptions = m_veraSettings->veraOptions();
 }
-VeraTool::~VeraTool(){
+VeraTool::~VeraTool()
+{
 	delete m_veraSettings;
 }
 
-void VeraTool::checkFile()
+void VeraTool::checkCurrentFile()
 {
-	if (!QFile::exists(m_command)){
+	if (!QFile::exists(m_command)) {
 		//show error message
 		return;
 	}
@@ -44,28 +47,29 @@ void VeraTool::checkFile()
 	QStringList fileOp = QStringList(file);
 	QProcess process;
 
-	process.start(m_command , m_basicOptions + fileOp);
+	process.start(m_command, m_basicOptions + fileOp);
 	process.waitForFinished(2000);
 
 	QString error = process.readAllStandardError();
 	if (!error.isEmpty()) {
 		QString context = "Error in running vera++:\n";
-		QRealPlugin::showOutput(error, context);
+		QRealPlugin::showOutput(context + error);
 		return;
 	}
 	QString output = process.readAllStandardOutput();
 	if (!output.isEmpty()) {
 		QString context = "Problems in style:\n";
-		QRealPlugin::showOutput(output, context);
+		QRealPlugin::showOutput(context + output);
 		return;
 	}
-	QRealPlugin::showOutput("Everything Ok", "vera++:\n");
+	QRealPlugin::showOutput("vera++:\n"
+		+ "Everything Ok\n");
 }
-void VeraTool::checkProject()
+void VeraTool::checkCurrentProject()
 {
 	/*QStringList files = m_getOpenedProjectFiles();
 	   for (QString f : files){
-		QRealPlugin::showOutput(f,"");
+		checkFile();
 	   }*/
 }
 

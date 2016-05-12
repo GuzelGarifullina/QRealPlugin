@@ -34,7 +34,6 @@ void VeraSettings::read()
 	QSettings *s = Core::ICore::settings();
 
 	s->beginGroup(QLatin1String(QReal::Constants::CORE_SETTINGS_GROUP));
-
 	const QStringList keys = s->allKeys();
 	for (const QString &key : keys) {
 		if (key == QLatin1String("command")) {
@@ -97,12 +96,10 @@ QStringList VeraSettings::veraOptions() const
 			<< fileInfo.fileName();
 
 	QStringList fileParts = fileInfo.absolutePath().split(QLatin1Char('/'));
-	fileParts.removeLast(); //filename
-	fileParts.removeLast(); // profiles dir
+	fileParts.removeLast(); //profiles dir
 	QString root = fileParts.join(QDir::separator());
 	options << QLatin1String("--root")
 			<< root;
-	qDebug() << root;
 
 	return options;
 }

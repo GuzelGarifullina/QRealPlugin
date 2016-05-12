@@ -86,14 +86,14 @@ void qRealCoreSettings::m_loadLicense(QString qRealPluginPath) const
 void qRealCoreSettings::m_loadDocumentation(QString qRealPluginPath) const
 {
 	QString documentsPath = qRealPluginPath + "/"
-			+ (Constants::DOCUMENTATION_DIR);
+		+ (Constants::DOCUMENTATION_DIR);
 
 	Q_ASSERT(QFileInfo::exists(documentsPath));
 
 	QDir dir(documentsPath);
 
 	auto items = dir.entryInfoList(
-		{"*.qch"}, QDir::Files | QDir::Readable | QDir::NoDotAndDotDot);
+			{"*.qch"}, QDir::Files | QDir::Readable | QDir::NoDotAndDotDot);
 	QStringList doc;
 	foreach(QFileInfo item, items){
 		doc << item.absoluteFilePath();
