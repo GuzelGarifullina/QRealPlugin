@@ -11,30 +11,30 @@
 
 #include "qrealpluginplugin.h"
 #include "qrealpluginconstants.h"
+#include "veraoptionspage.h"
+#include "verasettings.h"
+#include "qrealcoresettings.h"
 
-#include <coreplugin/icore.h>
-#include <coreplugin/icontext.h>
+#include <cppeditor/cppeditorconstants.h>
 #include <coreplugin/actionmanager/actionmanager.h>
 #include <coreplugin/actionmanager/command.h>
 #include <coreplugin/actionmanager/actioncontainer.h>
 #include <coreplugin/coreconstants.h>
+#include <coreplugin/icore.h>
+#include <coreplugin/icontext.h>
 #include <coreplugin/messagemanager.h>
 #include <extensionsystem/pluginmanager.h>
 #include <extensionsystem/pluginspec.h>
 
-#include <cppeditor/cppeditorconstants.h>
-
 #include <QAction>
 #include <QMessageBox>
-#include <QMainWindow>
 #include <QMenu>
 #include <QtPlugin>
 
 using namespace QReal::Internal;
 
 QRealPlugin::QRealPlugin() :
-	m_settings()
-	, m_vera(new VeraTool())
+	m_vera(new VeraTool())
 {
 	//nothing to do there
 }
@@ -49,7 +49,7 @@ bool QRealPlugin::initialize(const QStringList &arguments, QString *errorString)
 	Q_UNUSED(arguments)
 	Q_UNUSED(errorString)
 
-	m_settings.loadOnStartUp();
+	qRealCoreSettings::loadOnStartUp();
 
 	Core::ActionContainer *menu = Core::ActionManager::createMenu(Constants::MENU_ID);
 	menu->menu()->setTitle(tr(Constants::DISPLAY_NAME));
@@ -72,6 +72,7 @@ bool QRealPlugin::initialize(const QStringList &arguments, QString *errorString)
 	menu->addAction(cmd);
 	connect(m_checkProjectAction, SIGNAL(triggered()), m_vera, SLOT(checkCurrentProject()));
 
+	addAutoReleasedObject(new VeraOptionsPage(m_vera->getVeraSettings(), this));
 	updateActions();
 
 	return true;
@@ -104,4 +105,3 @@ void QRealPlugin::showOutput(const QString &output)
 {
 	Core::MessageManager::write(output);
 }
-

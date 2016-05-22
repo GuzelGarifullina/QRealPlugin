@@ -5,16 +5,17 @@
  * You may obtain a copy of the License at
  *
  *     http://www.gnu.org/licenses/gpl-3.0.en.html */
+
 #pragma once
 
 #include "qrealplugin_global.h"
-#include "qRealCoreSettings.h"
 #include "veratool.h"
 
 #include <extensionsystem/iplugin.h>
-#include <QSettings>
 #include <coreplugin/editormanager/editormanager.h>
 #include <coreplugin/editormanager/ieditor.h>
+
+#include <QSettings>
 
 namespace QReal{
 namespace Internal{
@@ -27,17 +28,15 @@ class QRealPlugin: public ExtensionSystem::IPlugin
 public:
 	QRealPlugin();
 	~QRealPlugin();
-
 	bool initialize(const QStringList &arguments, QString *errorString) override;
 	void extensionsInitialized() override;
 	ShutdownFlag aboutToShutdown() override;
-
 	static void showOutput(const QString &output);
 public slots:
 	void updateActions(Core::IEditor *editor = nullptr);
 private:
-	qRealCoreSettings m_settings;
 	VeraTool *m_vera;
+
 	QAction *m_checkFileAction;
 	QAction *m_checkProjectAction;
 };

@@ -10,10 +10,10 @@
 #include "qrealpluginconstants.h"
 
 #include <coreplugin/icore.h>
-#include <QFileInfo>
-#include <QDir>
 
 #include <QDebug>
+#include <QDir>
+#include <QFileInfo>
 
 using namespace QReal::Internal;
 
@@ -26,17 +26,15 @@ VeraSettings::VeraSettings()
 
 VeraSettings::~VeraSettings()
 {
-
 }
 
 void VeraSettings::read()
 {
 	QSettings *s = Core::ICore::settings();
-
 	s->beginGroup(QLatin1String(QReal::Constants::CORE_SETTINGS_GROUP));
 	const QStringList keys = s->allKeys();
 	for (const QString &key : keys) {
-		if (key == QLatin1String("command")) {
+		if (key == QLatin1String("VeraCommand")) {
 			setCommand(s->value(key).toString());
 		} else if (m_settings.contains(key)) {
 			m_settings[key] = s->value(key);
@@ -45,12 +43,14 @@ void VeraSettings::read()
 		}
 	}
 	s->endGroup();
+
+	//need to renew m_rules
+	m_veraOptions();
 }
 
 void VeraSettings::save()
 {
 	QSettings *s = Core::ICore::settings();
-
 	s->beginGroup(QLatin1String(QReal::Constants::CORE_SETTINGS_GROUP));
 	QMap<QString, QVariant>::const_iterator iSettings = m_settings.constBegin();
 	while (iSettings != m_settings.constEnd()) {
@@ -71,35 +71,39 @@ void VeraSettings::setCommand(const QString &command)
 	m_command = command;
 }
 
-QString VeraSettings::getRules() const
+QString VeraSettings::getRulePath() const
 {
 	return m_settings.value(QLatin1String(QReal::Constants::CORE_VERA_RULES))
-		   .toString();
+		.toString();
 }
 
-void VeraSettings::setRules(QString &rules)
+void VeraSettings::setRulePath(const QString &rules)
 {
 	m_settings.insert(QLatin1String(QReal::Constants::CORE_VERA_RULES)
 		, QVariant(rules));
+	//need to renew m_rules
+	m_veraOptions();
 }
 
 QStringList VeraSettings::veraOptions() const
 {
-	QStringList options;
-	QString rules = getRules();
+	return m_rules;
+}
+void VeraSettings::m_veraOptions()
+{
+	m_rules = QStringList();
+	QString rules = getRulePath();
 
 	if (rules.isEmpty()) {
-		return options;
+		return;
 	}
 	QFileInfo fileInfo(rules);
-	options << QLatin1String("--profile")
+	m_rules << QLatin1String("--profile")
 			<< fileInfo.fileName();
 
 	QStringList fileParts = fileInfo.absolutePath().split(QLatin1Char('/'));
 	fileParts.removeLast(); //profiles dir
 	QString root = fileParts.join(QDir::separator());
-	options << QLatin1String("--root")
-			<< root;
-
-	return options;
+	m_rules << QLatin1String("--root")
+		<< root;
 }

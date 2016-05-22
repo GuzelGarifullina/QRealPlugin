@@ -12,16 +12,23 @@ DEFINES += QREALPLUGIN_LIBRARY
 # qrealplugin files
 
 SOURCES += qrealpluginplugin.cpp \
-	qRealCoreSettings.cpp \
 	veratool.cpp \
-	verasettings.cpp
+	verasettings.cpp \
+    veraoptionspage.cpp \
+    qrealcoresettings.cpp
 
 HEADERS += qrealpluginplugin.h \
 		qrealplugin_global.h \
 		qrealpluginconstants.h \
-	qRealCoreSettings.h \
 	veratool.h \
-	verasettings.h
+	verasettings.h \
+    veraoptionspage.h \
+    qrealcoresettings.h
+
+
+FORMS += \
+    veraoptionspage.ui
+
 
 # Qt Creator linking
 QMAKE_CXXFLAGS += -Wall -Wextra -pedantic -Weffc++ -Wold-style-cast
@@ -65,5 +72,7 @@ QTC_PLUGIN_RECOMMENDS += \
 ###### End _dependencies.pri contents ######
 
 include($$QTCREATOR_SOURCES/src/qtcreatorplugin.pri)
+
+
 
 

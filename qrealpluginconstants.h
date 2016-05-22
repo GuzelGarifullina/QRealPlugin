@@ -11,8 +11,6 @@
 namespace QReal {
 namespace Constants {
 
-//const char ACTION_ID[] = "qrealplugin.Action";
-
 const char DISPLAY_NAME[] = "QReal";
 const char MENU_ID[] = "QReal.Menu";
 const char ACTION_CHECKFILE[]     = "QReal.CheckFile";
@@ -22,22 +20,23 @@ const char MSG_ACTION_CHECKFILE[]     = "Check File";
 const char MSG_ACTION_CHECKPROJECT[] = "Check Project";
 
 const char CORE_SETTINGS_GROUP [] = "QRealPlugin";
-const char CORE_VERA_RULES [] = "VeraRule";
+const char CORE_VERA_RULES [] = "VeraRulesPath";
+
+//for option page
+const char DISPLAY_VERA_NAME[] = "Vera";
+const char VERA_OPTION_ID[]= "Vera";
+const char OPTION_CATEGORY[] = "II.QReal";
 
 // need to load settings
 const char CORE_SETTINGS_LICENSE[] = "CppTools/LicenseTemplate";
 const char CORE_SETTINGS_DOCUMENTATION[] = "Help/UserDocumentation";
 const char CORE_SETTINGS_BEAUTIFIER_BUILD[] = "Beautifier/uncrustify/command";
 
-
 //in filesystem
 const char PLUGIN_DIR [] = "qRealPlugin";
 const char DEFAULT_SETTINGS_FILENAME [] = "defaultSettings.ini";
 const char LICENSE_FILENAME [] = "license.txt";
 const char DOCUMENTATION_DIR [] = "documentation";
-
-//only for Linux, and it is not always
-const char BEAUTIFIER_BUILD [] = "/usr/bin/uncrustify";
 
 } // namespace QReal
 } // namespace Constants

@@ -26,13 +26,15 @@ public:
 	void save();
 	QString command() const;
 	void setCommand (const QString &command);
-	QString getRules() const ;
-	void setRules(QString &rules);
+	QString getRulePath() const;
+	void setRulePath(const QString &rules);
 	QStringList veraOptions() const;
 
 private:
+	void m_veraOptions();
 	QMap<QString, QVariant> m_settings;
 	QString m_command = QLatin1String("vera++");
+	QStringList m_rules;
 };
 
 } // namespace Internal

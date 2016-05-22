@@ -8,11 +8,11 @@
 
 #pragma once
 
+#include "verasettings.h"
+
 #include <QObject>
 #include <QString>
 #include <QStringList>
-
-#include "verasettings.h"
 
 namespace QReal{
 namespace Internal{
@@ -22,21 +22,16 @@ class VeraTool : public QObject
 	Q_OBJECT
 public:
 	VeraTool();
+	VeraSettings * getVeraSettings();
 	~VeraTool();
 private:
-	QStringList m_basicOptions;
-
 	VeraSettings * m_veraSettings;
-	const QString m_command =  QLatin1String("/usr/local/bin/vera++"); //"echo";
-	const QString m_dir = QLatin1String("/home/guzel/Programming/qRealPlugin");
 	QString m_getOpenedFile() const ;
 	QStringList m_getOpenedProjectFiles() const;
 	bool m_checkFile(QString file);
-
 private slots:
 	void checkCurrentFile();
 	void checkCurrentProject();
-
 };
 
 } // namespace Internal

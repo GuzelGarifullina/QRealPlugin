@@ -9,12 +9,11 @@
 // !!to test soon will delete
 #undef QT_NO_CAST_FROM_ASCII
 
+#include "qrealcoresettings.h"
+#include "qrealpluginconstants.h"
+
 #include <coreplugin/icore.h>
 #include <coreplugin/helpmanager.h>
-
-
-#include "qrealpluginconstants.h"
-#include "qRealCoreSettings.h"
 
 #include <QFileInfo>
 #include <QMessageBox>
@@ -28,34 +27,35 @@ qRealCoreSettings::qRealCoreSettings()
 {
 	//nothing to do there
 }
+
 qRealCoreSettings::~qRealCoreSettings()
 {
 	//nothing to do there
 }
 
-void qRealCoreSettings::loadOnStartUp() const
+const QString qRealCoreSettings::m_qRealPluginPath = Core::ICore::userResourcePath()
+	+ QLatin1Char('/')
+	+ QLatin1String(Constants::PLUGIN_DIR);
+
+void qRealCoreSettings::loadOnStartUp()
 {
 	m_loadDocumentation(m_qRealPluginPath);
 }
 
-// !! add button
-void qRealCoreSettings::m_loadDefaultSystemSettings() const
+void qRealCoreSettings::loadDefaultSystemSettings()
 {
-	m_loadFromFile(m_qRealPluginPath);
+	m_loadGlobalSettings(m_qRealPluginPath);
 	m_loadLicense(m_qRealPluginPath);
-	m_loadBeautifierSettings();
 }
 
-// !!!! rename
-void qRealCoreSettings::m_loadFromFile(QString qRealPluginPath) const
+void qRealCoreSettings::m_loadGlobalSettings(QString qRealPluginPath)
 {
 	QString settingsPath = qRealPluginPath + "/"
 		+ (Constants::DEFAULT_SETTINGS_FILENAME);
 
 	Q_ASSERT(QFileInfo::exists(settingsPath));
 
-	QSettings defaultSettings(settingsPath
-		, QSettings::IniFormat);
+	QSettings defaultSettings(settingsPath, QSettings::IniFormat);
 	QStringList keysList = defaultSettings.allKeys();
 
 	QSettings *s = Core::ICore::settings();
@@ -63,13 +63,12 @@ void qRealCoreSettings::m_loadFromFile(QString qRealPluginPath) const
 	for (int i = 0; i < keysList.size(); ++i) {
 		QString key = keysList.at(i);
 		QVariant value = defaultSettings.value(key);
-		s->setValue(key
-			, value);
+		s->setValue(key, value);
 	}
 	s->sync();
 }
 
-void qRealCoreSettings::m_loadLicense(QString qRealPluginPath) const
+void qRealCoreSettings::m_loadLicense(QString qRealPluginPath)
 {
 	QString licensePath = qRealPluginPath + "/"
 		+ (Constants::LICENSE_FILENAME);
@@ -77,13 +76,12 @@ void qRealCoreSettings::m_loadLicense(QString qRealPluginPath) const
 	Q_ASSERT(QFileInfo::exists(licensePath));
 
 	QSettings *s = Core::ICore::settings();
-	s->setValue(Constants::CORE_SETTINGS_LICENSE
-		, licensePath);
+	s->setValue(Constants::CORE_SETTINGS_LICENSE, licensePath);
 	s->sync();
 }
 
 // loads all .qhc files from documentation dir
-void qRealCoreSettings::m_loadDocumentation(QString qRealPluginPath) const
+void qRealCoreSettings::m_loadDocumentation(QString qRealPluginPath)
 {
 	QString documentsPath = qRealPluginPath + "/"
 		+ (Constants::DOCUMENTATION_DIR);
@@ -92,26 +90,11 @@ void qRealCoreSettings::m_loadDocumentation(QString qRealPluginPath) const
 
 	QDir dir(documentsPath);
 
-	auto items = dir.entryInfoList(
-			{"*.qch"}, QDir::Files | QDir::Readable | QDir::NoDotAndDotDot);
+	auto items = dir.entryInfoList({"*.qch"}
+			,QDir::Files | QDir::Readable | QDir::NoDotAndDotDot);
 	QStringList doc;
 	foreach(QFileInfo item, items){
 		doc << item.absoluteFilePath();
 	}
 	Core::HelpManager::registerDocumentation(doc);
 }
-
-// look for other builds
-// dont need it?
-void qRealCoreSettings::m_loadBeautifierSettings() const
-{
-	#ifdef Q_OS_LINUX
-	Q_ASSERT(QFileInfo::exists(Constants::BEAUTIFIER_BUILD));
-
-	QSettings *s = Core::ICore::settings();
-	s->setValue(Constants::CORE_SETTINGS_BEAUTIFIER_BUILD
-		, Constants::BEAUTIFIER_BUILD);
-	s->sync();
-	#endif
-}
-

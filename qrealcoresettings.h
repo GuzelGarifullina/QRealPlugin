@@ -25,17 +25,16 @@ public:
 	~qRealCoreSettings();
 
 	//load default settings on first startup
-	//plugin and system
-	void loadOnStartUp() const;
-private:
-	void m_loadDefaultSystemSettings() const;
-	void m_loadFromFile(QString qRealPluginPath) const;
-	void m_loadLicense(QString qRealPluginPath) const;
-	void m_loadDocumentation(QString qRealPluginPath) const;
-	void m_loadBeautifierSettings() const;
-	const QString m_qRealPluginPath = (Core::ICore::userResourcePath()) + QLatin1Char('/')
-		+ QLatin1String(Constants::PLUGIN_DIR);
-};
+	//now it loads only documentation
+	static void loadOnStartUp();
 
+	//changes global settings to fit codestyle
+	static void loadDefaultSystemSettings();
+private:
+	static void m_loadGlobalSettings(QString qRealPluginPath);
+	static void m_loadLicense(QString qRealPluginPath);
+	static void m_loadDocumentation(QString qRealPluginPath);
+	static const QString m_qRealPluginPath;
+};
 } // namespace Internal
 } // namespace QReal
