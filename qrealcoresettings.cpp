@@ -18,7 +18,6 @@
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QDebug>
-#include <QtGlobal>
 #include <QDir>
 
 using namespace QReal::Internal;

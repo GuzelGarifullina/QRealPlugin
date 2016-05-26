@@ -14,20 +14,19 @@ DEFINES += QREALPLUGIN_LIBRARY
 SOURCES += qrealpluginplugin.cpp \
 	veratool.cpp \
 	verasettings.cpp \
-    veraoptionspage.cpp \
-    qrealcoresettings.cpp
+	veraoptionspage.cpp \
+	qrealcoresettings.cpp
 
 HEADERS += qrealpluginplugin.h \
 		qrealplugin_global.h \
 		qrealpluginconstants.h \
 	veratool.h \
 	verasettings.h \
-    veraoptionspage.h \
-    qrealcoresettings.h
+	veraoptionspage.h \
+	qrealcoresettings.h
 
 
-FORMS += \
-    veraoptionspage.ui
+FORMS += veraoptionspage.ui
 
 
 # Qt Creator linking
@@ -62,9 +61,7 @@ QTC_LIB_DEPENDS +=  \
 QTC_PLUGIN_DEPENDS += \
 	coreplugin \
 	cppeditor \
-	diffeditor \
-	projectexplorer \
-	beautifier
+	projectexplorer
 
 QTC_PLUGIN_RECOMMENDS += \
 	# optional plugin dependencies. nothing here at this time
@@ -72,7 +69,4 @@ QTC_PLUGIN_RECOMMENDS += \
 ###### End _dependencies.pri contents ######
 
 include($$QTCREATOR_SOURCES/src/qtcreatorplugin.pri)
-
-
-
 

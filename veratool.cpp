@@ -19,7 +19,9 @@
 #include <utils/fileutils.h>
 
 #include <QProcess>
+#include <QRegExp>
 #include <QString>
+#include <QStringList>
 
 using namespace QReal::Internal;
 
@@ -99,5 +101,8 @@ QString VeraTool::m_getOpenedFile() const
 QStringList VeraTool::m_getOpenedProjectFiles() const
 {
 	ProjectExplorer::Project *project = ProjectExplorer::ProjectTree::currentProject();
-	return project->files(ProjectExplorer::Project::FilesMode::SourceFiles);
+	QStringList sourceFiles =  project->files(ProjectExplorer::Project::FilesMode::SourceFiles);
+
+	QRegExp rx(".\\.(h|hh|hxx|h\\+\\+|hpp|hp|H|cxx|cc|C|cpp|c\\+\\+|cp|inl|qdoc|tcc|tpp|t\\+\\+|txx)$");
+	return sourceFiles.filter(rx);
 }
