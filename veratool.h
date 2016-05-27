@@ -21,8 +21,7 @@ class VeraTool : public QObject
 {
 	Q_OBJECT
 public:
-	VeraTool();
-	VeraSettings * getVeraSettings();
+	VeraTool(VeraSettings *settings);
 	~VeraTool();
 private:
 	VeraSettings * m_veraSettings;

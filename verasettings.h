@@ -16,7 +16,7 @@
 namespace QReal{
 namespace Internal{
 
-class VeraSettings : public QObject
+class	 : public QObject
 {
 	Q_OBJECT
 public:

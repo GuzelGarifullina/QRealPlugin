@@ -9,6 +9,7 @@
 #pragma once
 
 #include "qrealplugin_global.h"
+#include "verasettings.h"
 #include "veratool.h"
 
 #include <extensionsystem/iplugin.h>
@@ -35,7 +36,8 @@ public:
 public slots:
 	void updateActions(Core::IEditor *editor = nullptr);
 private:
-	VeraTool *m_vera;
+	VeraSettings *m_veraSettings;
+	VeraTool *m_veraTool;
 
 	QAction *m_checkFileAction;
 	QAction *m_checkProjectAction;

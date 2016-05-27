@@ -25,18 +25,13 @@
 
 using namespace QReal::Internal;
 
-VeraTool::VeraTool() :
-	m_veraSettings(new VeraSettings())
+VeraTool::VeraTool(VeraSettings *settings) :
+	m_veraSettings(settings)
 {
 }
 VeraTool::~VeraTool()
 {
-	delete m_veraSettings;
-}
-
-VeraSettings *VeraTool::getVeraSettings()
-{
-	return m_veraSettings;
+	//nothing to do there
 }
 
 void VeraTool::checkCurrentFile()

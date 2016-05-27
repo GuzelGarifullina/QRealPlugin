@@ -34,14 +34,16 @@
 using namespace QReal::Internal;
 
 QRealPlugin::QRealPlugin() :
-	m_vera(new VeraTool())
+	m_veraSettings(new VeraSettings),
+	m_veraTool(new VeraTool(m_veraSettings))
 {
 	//nothing to do there
 }
 
 QRealPlugin::~QRealPlugin()
 {
-	delete (m_vera);
+	delete (m_veraTool);
+	delete (m_veraSettings);
 }
 
 bool QRealPlugin::initialize(const QStringList &arguments, QString *errorString)
@@ -61,7 +63,7 @@ bool QRealPlugin::initialize(const QStringList &arguments, QString *errorString)
 			, Constants::ACTION_CHECKFILE
 			, Core::Context(Core::Constants::C_GLOBAL));
 	menu->addAction(cmd);
-	connect(m_checkFileAction, SIGNAL(triggered()), m_vera, SLOT(checkCurrentFile()));
+	connect(m_checkFileAction, SIGNAL(triggered()), m_veraTool, SLOT(checkCurrentFile()));
 
 	m_checkProjectAction = new QAction(
 			tr(Constants::MSG_ACTION_CHECKPROJECT)
@@ -70,9 +72,9 @@ bool QRealPlugin::initialize(const QStringList &arguments, QString *errorString)
 			, Constants::ACTION_CHECKPROJECT
 			, Core::Context(Core::Constants::C_GLOBAL));
 	menu->addAction(cmd);
-	connect(m_checkProjectAction, SIGNAL(triggered()), m_vera, SLOT(checkCurrentProject()));
+	connect(m_checkProjectAction, SIGNAL(triggered()), m_veraTool, SLOT(checkCurrentProject()));
 
-	addAutoReleasedObject(new VeraOptionsPage(m_vera->getVeraSettings(), this));
+	addAutoReleasedObject(new VeraOptionsPage(m_veraSettings, this));
 	updateActions();
 
 	return true;
